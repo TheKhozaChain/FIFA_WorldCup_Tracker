@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Dict, List
 
 from dotenv import load_dotenv
+from rich.console import Console
+from rich.markdown import Markdown
 
 from . import __version__
 from .baseline import load_baseline
@@ -16,6 +18,7 @@ from .model.standings import compute_standings
 from .providers import cache
 from .providers.factory import available_providers, load_tournament
 from .report import Row, build_rows
+from .report import commentary as commentary_report
 from .report import markdown as md_report
 from .report import table as table_report
 from .types import Tournament
@@ -49,12 +52,13 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
-def _positions(tournament: Tournament) -> Dict[str, int]:
-    positions: Dict[str, int] = {}
-    for ordered in compute_standings(tournament).values():
-        for i, rec in enumerate(ordered, start=1):
-            positions[rec.team] = i
-    return positions
+def _remaining_games(tournament: Tournament) -> Dict[str, int]:
+    remaining: Dict[str, int] = {t: 0 for t in tournament.teams()}
+    for m in tournament.matches:
+        if not m.played:
+            remaining[m.home] = remaining.get(m.home, 0) + 1
+            remaining[m.away] = remaining.get(m.away, 0) + 1
+    return remaining
 
 
 def _filter_group(rows: List[Row], group: str | None) -> List[Row]:
@@ -79,28 +83,38 @@ def run(argv: List[str] | None = None) -> int:
         home_advantage=args.home_advantage,
     )
 
-    rows = build_rows(
+    standings = compute_standings(tournament)
+    all_rows = build_rows(
         tournament=tournament,
         now_probs=result.probabilities,
         baseline=load_baseline(),
-        positions=_positions(tournament),
+        standings=standings,
+        remaining=_remaining_games(tournament),
     )
-    rows = _filter_group(rows, args.group)
+    rows = _filter_group(all_rows, args.group)
     if not rows:
         print(f"No teams found for group '{args.group}'.", file=sys.stderr)
         return 2
 
     scope = f"Group {args.group.upper()}" if args.group else "All 12 groups"
     title = f"WC2026 Advancement Tracker — {scope}"
+    played = sum(m.played for m in tournament.matches)
+    total = len(tournament.matches)
     caption = (
-        f"source: {note} · sims: {args.sims:,} · played: "
-        f"{sum(m.played for m in tournament.matches)}/{len(tournament.matches)} "
+        f"source: {note} · sims: {args.sims:,} · played: {played}/{total} "
         f"· top-2 per group + 8 best 3rd-placed advance"
     )
 
+    # Commentary always reflects the full field, even when the table is filtered.
+    commentary = commentary_report.build(
+        all_rows, n_sims=args.sims, played=played, total=total, source_note=note
+    )
+
     table_report.render(rows, title=title, note=caption)
+    Console().print(Markdown(commentary))
 
     if not args.no_markdown:
-        path = md_report.render(rows, title=title, note=caption, out_path=LATEST_MD)
+        path = md_report.render(rows, title=title, note=caption,
+                                out_path=LATEST_MD, commentary=commentary)
         print(f"\nMarkdown report written to {path}")
     return 0

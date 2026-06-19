@@ -89,7 +89,15 @@ python -m wctracker [options]
   --version
 ```
 
-Every run also writes **`latest.md`** — the same table in markdown, ready to
+The table includes a **Status** column — `✓ in` once a team is certain to
+advance in every simulation, `✗ out` once it's eliminated, `· live` otherwise.
+
+Every run also prints a generated **"Headline movements"** commentary — who's
+through, the biggest risers and fallers (and where the damage is clustered), the
+best-third bubble, and anyone eliminated. It's rule-based and deterministic (no
+LLM, no network), so it updates automatically as new results land.
+
+Both the table and the commentary are also written to **`latest.md`**, ready to
 share or commit.
 
 ## Data source
