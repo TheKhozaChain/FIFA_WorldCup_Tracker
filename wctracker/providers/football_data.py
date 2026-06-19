@@ -15,6 +15,7 @@ from typing import Dict, List
 
 import requests
 
+from ..names import canonical
 from ..types import Match, Tournament
 from .base import DataProvider, ProviderError
 
@@ -80,6 +81,7 @@ def _parse(payload: dict) -> Tournament:
         away = (m.get("awayTeam") or {}).get("name")
         if not home or not away:
             continue
+        home, away = canonical(home), canonical(away)
 
         members = groups.setdefault(group, [])
         for team in (home, away):

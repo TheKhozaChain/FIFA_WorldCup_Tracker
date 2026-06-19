@@ -94,8 +94,11 @@ committed so the diff is stable and shared by everyone who clones the repo.
   result). Adequate for tournament-level probabilities; not a betting model.
 - **Static ratings.** Ratings are pre-tournament seeds and are *not* updated by
   in-tournament form. Swap in your own `ratings.json` to change priors.
-- **Name matching.** Probabilities are keyed by team name. If a live provider
-  spells a team differently from `ratings.json`/`baseline.json`, that team falls
-  back to the default rating / shows "—" for Start. Align the names to fix.
+- **Name matching.** Probabilities are keyed by team name. Live providers run
+  every name through `wctracker/names.py` (`canonical()`), which folds known
+  variants ("Czechia", "Türkiye", "Korea Republic", "Côte d'Ivoire", …) onto the
+  canonical spellings used by `ratings.json`/`baseline.json`. A genuinely
+  unrecognised name still falls back to the default rating / shows "—" for
+  Start — add it to `_ALIASES` to fix.
 - **Monte Carlo noise.** At N = 10,000, percentages carry roughly ±0.5%. Raise
   `--sims` for steadier numbers; use `--seed` for reproducible output.
