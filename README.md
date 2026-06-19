@@ -29,22 +29,42 @@ played — no manual data entry.
 └───────────┴─────┴─────┴────────┴────────┴─────────┘
 ```
 
-## Quick start
+## Run it in 30 seconds
+
+You need **Python 3.9+** and **git** installed — nothing else. Copy-paste this:
 
 ```bash
-git clone <your-repo-url> && cd FIFA_WorldCup_2026
+git clone https://github.com/TheKhozaChain/FIFA_WorldCup_Tracker.git
+cd FIFA_WorldCup_Tracker
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-
-# Runs immediately with the bundled offline snapshot — no API key needed:
 python -m wctracker --provider offline
 ```
 
-To pull **live** results, get a free key and add it to `.env`:
+That's it — it prints the table straight away using the bundled sample data, no
+API key required.
+
+> **Windows:** replace `source .venv/bin/activate` with `.venv\Scripts\activate`.
+
+**Coming back later?** The install steps are one-time. To run it again, just
+re-activate the environment first (needed in each new terminal window):
+
+```bash
+cd FIFA_WorldCup_Tracker
+source .venv/bin/activate      # your prompt shows (.venv) when active
+python -m wctracker --provider offline
+```
+
+### Live results (optional)
+
+`--provider offline` uses bundled **sample** data so it works instantly. For
+**real** match results, grab a free key (10 req/min) at
+[football-data.org/client/register](https://www.football-data.org/client/register)
+— each person uses their own:
 
 ```bash
 cp .env.example .env          # then edit .env and paste your key
-python -m wctracker           # uses football-data.org by default
+python -m wctracker           # no flag = live football-data.org
 python -m wctracker --refresh # force a fresh fetch (ignore the cache)
 ```
 
