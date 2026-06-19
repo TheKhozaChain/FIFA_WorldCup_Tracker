@@ -31,7 +31,31 @@ played — no manual data entry.
 
 ## Run it in 30 seconds
 
-You need **Python 3.9+** and **git** installed — nothing else. Copy-paste this:
+**Prerequisites:** Python 3.9+ and git.
+- **Windows:** install [Python](https://www.python.org/downloads/windows/) (tick
+  **"Add python.exe to PATH"** in the installer) and [Git for Windows](https://git-scm.com/download/win).
+- **macOS:** `brew install python git`, or grab them from python.org / git-scm.com.
+
+Then copy-paste the block for your system. It prints the table immediately from a
+bundled snapshot of the **real** group-stage results (frozen 2026-06-19) — no API
+key needed to try it.
+
+> **Don't have git?** You can skip it: on the GitHub page click the green
+> **Code ▾** button → **Download ZIP**, unzip it, then open a terminal in that
+> folder and run the commands below starting from the `python -m venv` line.
+
+**Windows (PowerShell):**
+
+```powershell
+git clone https://github.com/TheKhozaChain/FIFA_WorldCup_Tracker.git
+cd FIFA_WorldCup_Tracker
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m wctracker --provider offline
+```
+
+**macOS / Linux:**
 
 ```bash
 git clone https://github.com/TheKhozaChain/FIFA_WorldCup_Tracker.git
@@ -41,37 +65,47 @@ pip install -r requirements.txt
 python -m wctracker --provider offline
 ```
 
-That's it — it prints the table straight away from a bundled snapshot of the
-**real** group-stage results (frozen 2026-06-19), no API key required. For
-up-to-the-minute numbers, use a live provider (below).
+**Coming back later?** Install is one-time. To run again, just re-activate the
+environment first (needed in each new terminal window) and run:
 
-> **Windows:** replace `source .venv/bin/activate` with `.venv\Scripts\activate`.
+| | Activate | Run |
+| --- | --- | --- |
+| **Windows** | `.venv\Scripts\Activate.ps1` | `python -m wctracker` |
+| **macOS / Linux** | `source .venv/bin/activate` | `python -m wctracker` |
 
-**Coming back later?** The install steps are one-time. To run it again, just
-re-activate the environment first (needed in each new terminal window):
+Your prompt shows `(.venv)` when the environment is active.
 
-```bash
-cd FIFA_WorldCup_Tracker
-source .venv/bin/activate      # your prompt shows (.venv) when active
-python -m wctracker --provider offline
+> **Windows tip:** if PowerShell blocks the activate script with a "running
+> scripts is disabled" error, run this once, then retry:
+> `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. (Or use `cmd` instead,
+> where the command is `.venv\Scripts\activate.bat`.)
+
+## Get live, real-time data (free, ~2 minutes)
+
+The offline snapshot is frozen at a date, so it goes stale. For **live numbers
+that update themselves** as matches are played, each person gets their own free
+API key (it's free forever, no card, 10 requests/minute — plenty):
+
+1. **Register:** open **https://www.football-data.org/client/register**
+   (keep the `www.` — without it some browsers/VPNs flag a certificate
+   mismatch). Enter your email, pick **Python**, accept the terms.
+2. **Check your email** — you'll get an API token (a long string) within a minute.
+3. **Create your `.env` file** in the project folder:
+   - **Windows (PowerShell):** `Copy-Item .env.example .env`
+   - **macOS / Linux:** `cp .env.example .env`
+4. **Paste your token** into `.env` so the first line reads:
+   `FOOTBALL_DATA_API_KEY=your_token_here` (open `.env` in any text editor —
+   Notepad is fine).
+5. **Run it live:**
+
+```
+python -m wctracker --refresh      # fetches the latest results, updates the table
+python -m wctracker                # reuses the cached data (no API call) for ~1 hour
 ```
 
-### Live results (optional)
-
-`--provider offline` uses a bundled snapshot of real results **frozen at a
-date**, so it works instantly but goes stale. For **live, auto-updating**
-results, grab a free key (10 req/min) at
-[football-data.org/client/register](https://www.football-data.org/client/register)
-— each person uses their own:
-
-```bash
-cp .env.example .env          # then edit .env and paste your key
-python -m wctracker           # no flag = live football-data.org
-python -m wctracker --refresh # force a fresh fetch (ignore the cache)
-```
-
-If a live fetch fails (missing key, rate limit, network), the tool falls back to
-the bundled snapshot so it always prints something.
+That's everything. If a live fetch ever fails (no key, rate limit, no internet),
+the tool automatically falls back to the bundled snapshot, so it always prints
+something. `.env` is gitignored — your key stays on your machine.
 
 ## Usage
 
