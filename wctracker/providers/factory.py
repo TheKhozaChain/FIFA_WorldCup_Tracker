@@ -43,19 +43,23 @@ def load_tournament(
 ) -> Tuple[Tournament, str]:
     """Return (tournament, note) where `note` describes the data's provenance
     for display (cache hit, live fetch, or offline fallback)."""
+    is_offline = provider_name == OfflineProvider.name
     if not refresh:
         cached = cache.load(provider_name, ttl=ttl)
         if cached is not None:
-            return cached, f"cache ({provider_name})"
+            label = "⚠ SAMPLE data (offline)" if is_offline else f"cache ({provider_name})"
+            return cached, label
 
     provider = make_provider(provider_name)
     try:
         tournament = provider.fetch()
         cache.save(provider_name, tournament)
+        if is_offline:
+            return tournament, "⚠ SAMPLE data (offline) — illustrative, NOT real results"
         return tournament, f"live fetch ({provider_name})"
     except ProviderError as exc:
-        if provider_name == OfflineProvider.name:
+        if is_offline:
             raise
         # Fall back to the bundled snapshot so the tool still runs offline.
         fallback = OfflineProvider().fetch()
-        return fallback, f"offline snapshot (fallback: {exc})"
+        return fallback, f"⚠ SAMPLE data (offline fallback — live fetch failed: {exc})"
