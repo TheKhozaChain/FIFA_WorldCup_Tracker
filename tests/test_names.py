@@ -5,15 +5,14 @@ from wctracker.names import CANONICAL, canonical
 
 def test_known_provider_variants_map_to_canonical():
     cases = {
-        "Czechia": "Czech Republic",
-        "Korea Republic": "South Korea",
-        "Türkiye": "Turkey",
-        "Côte d'Ivoire": "Ivory Coast",
-        "Curaçao": "Curacao",
-        "Cabo Verde": "Cape Verde",
-        "United States": "USA",
-        "IR Iran": "Iran",
-        "Congo DR": "DR Congo",
+        "Czech Republic": "Czechia",
+        "South Korea": "Korea Republic",
+        "Turkey": "Türkiye",
+        "Ivory Coast": "Côte d'Ivoire",
+        "Cape Verde": "Cabo Verde",
+        "USA": "United States",
+        "Iran": "IR Iran",
+        "DR Congo": "Congo DR",
     }
     for provider_name, expected in cases.items():
         assert canonical(provider_name) == expected
@@ -26,8 +25,10 @@ def test_canonical_names_are_stable():
 
 
 def test_accent_and_case_insensitive():
-    assert canonical("CURACAO") == "Curacao"
-    assert canonical("curaçao") == "Curacao"
+    # Accent/case-only variants of a canonical name resolve back to it.
+    assert canonical("CURAÇAO") == "Curaçao"
+    assert canonical("curacao") == "Curaçao"
+    assert canonical("turkiye") == "Türkiye"
 
 
 def test_unknown_name_passes_through():

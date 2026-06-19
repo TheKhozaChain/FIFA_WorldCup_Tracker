@@ -13,40 +13,36 @@ import unicodedata
 
 # The canonical spelling for each of the 48 teams (matches ratings/baseline).
 CANONICAL = {
-    "Mexico", "South Korea", "Czech Republic", "South Africa", "Canada",
+    "Mexico", "Korea Republic", "Czechia", "South Africa", "Canada",
     "Switzerland", "Bosnia and Herzegovina", "Qatar", "Scotland", "Morocco",
-    "Brazil", "Haiti", "USA", "Australia", "Turkey", "Paraguay", "Germany",
-    "Ivory Coast", "Ecuador", "Curacao", "Sweden", "Japan", "Netherlands",
-    "Tunisia", "New Zealand", "Iran", "Belgium", "Egypt", "Uruguay",
-    "Saudi Arabia", "Spain", "Cape Verde", "Norway", "France", "Senegal",
-    "Iraq", "Argentina", "Austria", "Jordan", "Algeria", "Colombia",
-    "DR Congo", "Portugal", "Uzbekistan", "England", "Ghana", "Panama",
+    "Brazil", "Haiti", "United States", "Australia", "Türkiye", "Paraguay",
+    "Germany", "Côte d'Ivoire", "Ecuador", "Curaçao", "Sweden", "Japan",
+    "Netherlands", "Tunisia", "New Zealand", "IR Iran", "Belgium", "Egypt",
+    "Uruguay", "Saudi Arabia", "Spain", "Cabo Verde", "Norway", "France",
+    "Senegal", "Iraq", "Argentina", "Austria", "Jordan", "Algeria", "Colombia",
+    "Congo DR", "Portugal", "Uzbekistan", "England", "Ghana", "Panama",
     "Croatia",
 }
 
 # Known provider variants -> canonical. Keys are matched accent- and
-# case-insensitively (see `_key`), so only genuinely different wordings need
-# listing here, not every accent/case variation.
+# case-insensitively (see `_key`), so accent/case-only variants of the
+# canonical names resolve automatically; list only different *wordings* here.
 _ALIASES = {
-    "czechia": "Czech Republic",
-    "korea republic": "South Korea",
-    "republic of korea": "South Korea",
-    "turkiye": "Turkey",
-    "cote d'ivoire": "Ivory Coast",
-    "cote divoire": "Ivory Coast",
-    "ivory coast": "Ivory Coast",
-    "cabo verde": "Cape Verde",
-    "united states": "USA",
-    "united states of america": "USA",
-    "ir iran": "Iran",
-    "iran islamic republic of": "Iran",
+    "czech republic": "Czechia",
+    "south korea": "Korea Republic",
+    "republic of korea": "Korea Republic",
+    "turkey": "Türkiye",
+    "ivory coast": "Côte d'Ivoire",
+    "cape verde": "Cabo Verde",
+    "usa": "United States",
+    "united states of america": "United States",
+    "iran": "IR Iran",
+    "iran islamic republic of": "IR Iran",
     "bosnia & herzegovina": "Bosnia and Herzegovina",
     "bosnia-herzegovina": "Bosnia and Herzegovina",
-    "bosnia and herzegovina": "Bosnia and Herzegovina",
-    "congo dr": "DR Congo",
-    "dr congo": "DR Congo",
-    "democratic republic of the congo": "DR Congo",
-    "dr of the congo": "DR Congo",
+    "dr congo": "Congo DR",
+    "democratic republic of the congo": "Congo DR",
+    "dr of the congo": "Congo DR",
 }
 
 

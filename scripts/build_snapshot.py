@@ -16,26 +16,26 @@ from pathlib import Path
 FETCHED_AT = "2026-06-19"
 
 GROUPS = {
-    "A": ["Mexico", "South Korea", "Czech Republic", "South Africa"],
+    "A": ["Mexico", "Korea Republic", "Czechia", "South Africa"],
     "B": ["Canada", "Switzerland", "Bosnia and Herzegovina", "Qatar"],
     "C": ["Scotland", "Morocco", "Brazil", "Haiti"],
-    "D": ["USA", "Australia", "Turkey", "Paraguay"],
-    "E": ["Germany", "Ivory Coast", "Ecuador", "Curacao"],
+    "D": ["United States", "Australia", "Türkiye", "Paraguay"],
+    "E": ["Germany", "Côte d'Ivoire", "Ecuador", "Curaçao"],
     "F": ["Sweden", "Japan", "Netherlands", "Tunisia"],
-    "G": ["New Zealand", "Iran", "Belgium", "Egypt"],
-    "H": ["Uruguay", "Saudi Arabia", "Spain", "Cape Verde"],
+    "G": ["New Zealand", "IR Iran", "Belgium", "Egypt"],
+    "H": ["Uruguay", "Saudi Arabia", "Spain", "Cabo Verde"],
     "I": ["Norway", "France", "Senegal", "Iraq"],
     "J": ["Argentina", "Austria", "Jordan", "Algeria"],
-    "K": ["Colombia", "DR Congo", "Portugal", "Uzbekistan"],
+    "K": ["Colombia", "Congo DR", "Portugal", "Uzbekistan"],
     "L": ["England", "Ghana", "Panama", "Croatia"],
 }
 
 # (group, home, away, home_goals, away_goals) for matches already played.
 PLAYED = [
     ("A", "Mexico", "South Africa", 2, 0),
-    ("A", "South Korea", "Czech Republic", 2, 1),
-    ("A", "Czech Republic", "South Africa", 1, 1),
-    ("A", "Mexico", "South Korea", 1, 0),
+    ("A", "Korea Republic", "Czechia", 2, 1),
+    ("A", "Czechia", "South Africa", 1, 1),
+    ("A", "Mexico", "Korea Republic", 1, 0),
 
     ("B", "Canada", "Bosnia and Herzegovina", 1, 1),
     ("B", "Qatar", "Switzerland", 1, 1),
@@ -45,19 +45,19 @@ PLAYED = [
     ("C", "Brazil", "Morocco", 1, 1),
     ("C", "Haiti", "Scotland", 0, 1),
 
-    ("D", "USA", "Paraguay", 4, 1),
-    ("D", "Australia", "Turkey", 2, 0),
+    ("D", "United States", "Paraguay", 4, 1),
+    ("D", "Australia", "Türkiye", 2, 0),
 
-    ("E", "Germany", "Curacao", 7, 1),
-    ("E", "Ivory Coast", "Ecuador", 1, 0),
+    ("E", "Germany", "Curaçao", 7, 1),
+    ("E", "Côte d'Ivoire", "Ecuador", 1, 0),
 
     ("F", "Netherlands", "Japan", 2, 2),
     ("F", "Sweden", "Tunisia", 5, 1),
 
     ("G", "Belgium", "Egypt", 1, 1),
-    ("G", "Iran", "New Zealand", 2, 2),
+    ("G", "IR Iran", "New Zealand", 2, 2),
 
-    ("H", "Spain", "Cape Verde", 0, 0),
+    ("H", "Spain", "Cabo Verde", 0, 0),
     ("H", "Saudi Arabia", "Uruguay", 1, 1),
 
     ("I", "France", "Senegal", 3, 1),
@@ -66,7 +66,7 @@ PLAYED = [
     ("J", "Argentina", "Algeria", 3, 0),
     ("J", "Austria", "Jordan", 3, 1),
 
-    ("K", "Portugal", "DR Congo", 1, 1),
+    ("K", "Portugal", "Congo DR", 1, 1),
     ("K", "Uzbekistan", "Colombia", 1, 3),
 
     ("L", "England", "Croatia", 4, 2),
@@ -75,27 +75,27 @@ PLAYED = [
 
 # (group, home, away) for fixtures not yet played, in real schedule orientation.
 REMAINING = [
-    ("A", "Czech Republic", "Mexico"), ("A", "South Africa", "South Korea"),
+    ("A", "Czechia", "Mexico"), ("A", "South Africa", "Korea Republic"),
 
     ("B", "Switzerland", "Canada"), ("B", "Bosnia and Herzegovina", "Qatar"),
 
     ("C", "Scotland", "Morocco"), ("C", "Brazil", "Haiti"),
     ("C", "Scotland", "Brazil"), ("C", "Morocco", "Haiti"),
 
-    ("D", "USA", "Australia"), ("D", "Turkey", "Paraguay"),
-    ("D", "Turkey", "USA"), ("D", "Paraguay", "Australia"),
+    ("D", "United States", "Australia"), ("D", "Türkiye", "Paraguay"),
+    ("D", "Türkiye", "United States"), ("D", "Paraguay", "Australia"),
 
-    ("E", "Germany", "Ivory Coast"), ("E", "Ecuador", "Curacao"),
-    ("E", "Curacao", "Ivory Coast"), ("E", "Ecuador", "Germany"),
+    ("E", "Germany", "Côte d'Ivoire"), ("E", "Ecuador", "Curaçao"),
+    ("E", "Curaçao", "Côte d'Ivoire"), ("E", "Ecuador", "Germany"),
 
     ("F", "Netherlands", "Sweden"), ("F", "Tunisia", "Japan"),
     ("F", "Japan", "Sweden"), ("F", "Tunisia", "Netherlands"),
 
-    ("G", "Belgium", "Iran"), ("G", "New Zealand", "Egypt"),
-    ("G", "Egypt", "Iran"), ("G", "New Zealand", "Belgium"),
+    ("G", "Belgium", "IR Iran"), ("G", "New Zealand", "Egypt"),
+    ("G", "Egypt", "IR Iran"), ("G", "New Zealand", "Belgium"),
 
-    ("H", "Spain", "Saudi Arabia"), ("H", "Uruguay", "Cape Verde"),
-    ("H", "Cape Verde", "Saudi Arabia"), ("H", "Uruguay", "Spain"),
+    ("H", "Spain", "Saudi Arabia"), ("H", "Uruguay", "Cabo Verde"),
+    ("H", "Cabo Verde", "Saudi Arabia"), ("H", "Uruguay", "Spain"),
 
     ("I", "France", "Iraq"), ("I", "Norway", "Senegal"),
     ("I", "Norway", "France"), ("I", "Senegal", "Iraq"),
@@ -103,8 +103,8 @@ REMAINING = [
     ("J", "Argentina", "Austria"), ("J", "Jordan", "Algeria"),
     ("J", "Algeria", "Austria"), ("J", "Jordan", "Argentina"),
 
-    ("K", "Portugal", "Uzbekistan"), ("K", "Colombia", "DR Congo"),
-    ("K", "Colombia", "Portugal"), ("K", "DR Congo", "Uzbekistan"),
+    ("K", "Portugal", "Uzbekistan"), ("K", "Colombia", "Congo DR"),
+    ("K", "Colombia", "Portugal"), ("K", "Congo DR", "Uzbekistan"),
 
     ("L", "England", "Ghana"), ("L", "Panama", "Croatia"),
     ("L", "Panama", "England"), ("L", "Croatia", "Ghana"),
@@ -146,7 +146,7 @@ def main() -> None:
         "matches": matches,
     }
     out = Path(__file__).resolve().parent.parent / "wctracker" / "data" / "snapshot.json"
-    out.write_text(json.dumps(snapshot, indent=2) + "\n")
+    out.write_text(json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n")
     played = sum(1 for m in matches if m["played"])
     print(f"wrote {out}: {len(matches)} matches ({played} played, "
           f"{len(matches) - played} remaining)")

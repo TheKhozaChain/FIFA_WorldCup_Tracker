@@ -39,7 +39,7 @@ def main() -> None:
         "probabilities": {t: round(p * 100, 2) for t, p in result.probabilities.items()},
     }
     out = Path(__file__).resolve().parent.parent / "data" / "baseline.json"
-    out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    out.write_text(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
     print(f"wrote {out} for {len(result.probabilities)} teams (N={N_SIMS})")
 
 

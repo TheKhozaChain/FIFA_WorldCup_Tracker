@@ -5,11 +5,11 @@
   "Spain": 2050, "France": 2040, "Argentina": 2030, "England": 2000, "Brazil": 1990,
   "Portugal": 1970, "Netherlands": 1950, "Germany": 1940, "Belgium": 1900, "Croatia": 1870,
   "Morocco": 1855, "Uruguay": 1850, "Colombia": 1840, "Switzerland": 1810, "Mexico": 1810,
-  "USA": 1800, "Japan": 1800, "Norway": 1795, "Senegal": 1790, "Turkey": 1780,
-  "Ecuador": 1760, "Austria": 1755, "South Korea": 1745, "Australia": 1730, "Canada": 1725,
-  "Sweden": 1715, "Egypt": 1710, "Iran": 1700, "Ivory Coast": 1700, "Scotland": 1695,
-  "Czech Republic": 1690, "Paraguay": 1680, "Algeria": 1675, "Tunisia": 1660, "DR Congo": 1655,
+  "United States": 1800, "Japan": 1800, "Norway": 1795, "Senegal": 1790, "Türkiye": 1780,
+  "Ecuador": 1760, "Austria": 1755, "Korea Republic": 1745, "Australia": 1730, "Canada": 1725,
+  "Sweden": 1715, "Egypt": 1710, "IR Iran": 1700, "Côte d'Ivoire": 1700, "Scotland": 1695,
+  "Czechia": 1690, "Paraguay": 1680, "Algeria": 1675, "Tunisia": 1660, "Congo DR": 1655,
   "Bosnia and Herzegovina": 1640, "Ghana": 1620, "South Africa": 1600, "Panama": 1595, "Qatar": 1595,
-  "Saudi Arabia": 1585, "Uzbekistan": 1560, "Iraq": 1555, "Jordan": 1520, "Cape Verde": 1500,
-  "New Zealand": 1480, "Haiti": 1450, "Curacao": 1440
+  "Saudi Arabia": 1585, "Uzbekistan": 1560, "Iraq": 1555, "Jordan": 1520, "Cabo Verde": 1500,
+  "New Zealand": 1480, "Haiti": 1450, "Curaçao": 1440
 }

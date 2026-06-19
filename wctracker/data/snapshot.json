@@ -1,11 +1,11 @@
 {
-  "_comment": "Real WC2026 group-stage state as of 2026-06-19, curated from the official/Wikipedia group pages. Frozen snapshot \u2014 re-run scripts/build_snapshot.py to refresh, or use a live provider for current numbers.",
+  "_comment": "Real WC2026 group-stage state as of 2026-06-19, curated from the official/Wikipedia group pages. Frozen snapshot — re-run scripts/build_snapshot.py to refresh, or use a live provider for current numbers.",
   "fetched_at": "2026-06-19",
   "groups": {
     "A": [
       "Mexico",
-      "South Korea",
-      "Czech Republic",
+      "Korea Republic",
+      "Czechia",
       "South Africa"
     ],
     "B": [
@@ -21,16 +21,16 @@
       "Haiti"
     ],
     "D": [
-      "USA",
+      "United States",
       "Australia",
-      "Turkey",
+      "Türkiye",
       "Paraguay"
     ],
     "E": [
       "Germany",
-      "Ivory Coast",
+      "Côte d'Ivoire",
       "Ecuador",
-      "Curacao"
+      "Curaçao"
     ],
     "F": [
       "Sweden",
@@ -40,7 +40,7 @@
     ],
     "G": [
       "New Zealand",
-      "Iran",
+      "IR Iran",
       "Belgium",
       "Egypt"
     ],
@@ -48,7 +48,7 @@
       "Uruguay",
       "Saudi Arabia",
       "Spain",
-      "Cape Verde"
+      "Cabo Verde"
     ],
     "I": [
       "Norway",
@@ -64,7 +64,7 @@
     ],
     "K": [
       "Colombia",
-      "DR Congo",
+      "Congo DR",
       "Portugal",
       "Uzbekistan"
     ],
@@ -86,15 +86,15 @@
     },
     {
       "group": "A",
-      "home": "South Korea",
-      "away": "Czech Republic",
+      "home": "Korea Republic",
+      "away": "Czechia",
       "home_goals": 2,
       "away_goals": 1,
       "played": true
     },
     {
       "group": "A",
-      "home": "Czech Republic",
+      "home": "Czechia",
       "away": "South Africa",
       "home_goals": 1,
       "away_goals": 1,
@@ -103,7 +103,7 @@
     {
       "group": "A",
       "home": "Mexico",
-      "away": "South Korea",
+      "away": "Korea Republic",
       "home_goals": 1,
       "away_goals": 0,
       "played": true
@@ -158,7 +158,7 @@
     },
     {
       "group": "D",
-      "home": "USA",
+      "home": "United States",
       "away": "Paraguay",
       "home_goals": 4,
       "away_goals": 1,
@@ -167,7 +167,7 @@
     {
       "group": "D",
       "home": "Australia",
-      "away": "Turkey",
+      "away": "Türkiye",
       "home_goals": 2,
       "away_goals": 0,
       "played": true
@@ -175,14 +175,14 @@
     {
       "group": "E",
       "home": "Germany",
-      "away": "Curacao",
+      "away": "Curaçao",
       "home_goals": 7,
       "away_goals": 1,
       "played": true
     },
     {
       "group": "E",
-      "home": "Ivory Coast",
+      "home": "Côte d'Ivoire",
       "away": "Ecuador",
       "home_goals": 1,
       "away_goals": 0,
@@ -214,7 +214,7 @@
     },
     {
       "group": "G",
-      "home": "Iran",
+      "home": "IR Iran",
       "away": "New Zealand",
       "home_goals": 2,
       "away_goals": 2,
@@ -223,7 +223,7 @@
     {
       "group": "H",
       "home": "Spain",
-      "away": "Cape Verde",
+      "away": "Cabo Verde",
       "home_goals": 0,
       "away_goals": 0,
       "played": true
@@ -271,7 +271,7 @@
     {
       "group": "K",
       "home": "Portugal",
-      "away": "DR Congo",
+      "away": "Congo DR",
       "home_goals": 1,
       "away_goals": 1,
       "played": true
@@ -302,7 +302,7 @@
     },
     {
       "group": "A",
-      "home": "Czech Republic",
+      "home": "Czechia",
       "away": "Mexico",
       "home_goals": null,
       "away_goals": null,
@@ -311,7 +311,7 @@
     {
       "group": "A",
       "home": "South Africa",
-      "away": "South Korea",
+      "away": "Korea Republic",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -366,7 +366,7 @@
     },
     {
       "group": "D",
-      "home": "USA",
+      "home": "United States",
       "away": "Australia",
       "home_goals": null,
       "away_goals": null,
@@ -374,7 +374,7 @@
     },
     {
       "group": "D",
-      "home": "Turkey",
+      "home": "Türkiye",
       "away": "Paraguay",
       "home_goals": null,
       "away_goals": null,
@@ -382,8 +382,8 @@
     },
     {
       "group": "D",
-      "home": "Turkey",
-      "away": "USA",
+      "home": "Türkiye",
+      "away": "United States",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -399,7 +399,7 @@
     {
       "group": "E",
       "home": "Germany",
-      "away": "Ivory Coast",
+      "away": "Côte d'Ivoire",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -407,15 +407,15 @@
     {
       "group": "E",
       "home": "Ecuador",
-      "away": "Curacao",
+      "away": "Curaçao",
       "home_goals": null,
       "away_goals": null,
       "played": false
     },
     {
       "group": "E",
-      "home": "Curacao",
-      "away": "Ivory Coast",
+      "home": "Curaçao",
+      "away": "Côte d'Ivoire",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -463,7 +463,7 @@
     {
       "group": "G",
       "home": "Belgium",
-      "away": "Iran",
+      "away": "IR Iran",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -479,7 +479,7 @@
     {
       "group": "G",
       "home": "Egypt",
-      "away": "Iran",
+      "away": "IR Iran",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -503,14 +503,14 @@
     {
       "group": "H",
       "home": "Uruguay",
-      "away": "Cape Verde",
+      "away": "Cabo Verde",
       "home_goals": null,
       "away_goals": null,
       "played": false
     },
     {
       "group": "H",
-      "home": "Cape Verde",
+      "home": "Cabo Verde",
       "away": "Saudi Arabia",
       "home_goals": null,
       "away_goals": null,
@@ -599,7 +599,7 @@
     {
       "group": "K",
       "home": "Colombia",
-      "away": "DR Congo",
+      "away": "Congo DR",
       "home_goals": null,
       "away_goals": null,
       "played": false
@@ -614,7 +614,7 @@
     },
     {
       "group": "K",
-      "home": "DR Congo",
+      "home": "Congo DR",
       "away": "Uzbekistan",
       "home_goals": null,
       "away_goals": null,
