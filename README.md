@@ -18,15 +18,15 @@ played — no manual data entry.
 > who reaches the finals.
 
 ```
-        WC2026 Advancement Tracker — Group C
-┏━━━━━━━━━━━┳━━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
-┃ Team      ┃ Grp ┃ Pos ┃  Start ┃    Now ┃       Δ ┃
-┡━━━━━━━━━━━╇━━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
-│ Qatar     │  C  │  2  │  34.1% │ 100.0% │ ▲ +65.9 │
-│ Argentina │  C  │  1  │  96.6% │ 100.0% │ ▲  +3.4 │
-│ Sweden    │  C  │  3  │  57.5% │  25.5% │ ▼ -32.0 │
-│ Mexico    │  C  │  4  │  75.9% │  29.6% │ ▼ -46.3 │
-└───────────┴─────┴─────┴────────┴────────┴─────────┘
+           WC2026 Advancement Tracker — Group A
+┏━━━━━━━━━━━━━━━━┳━━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━━┳━━━━━━━━━┓
+┃ Team           ┃ Grp ┃ Pos ┃  Start ┃    Now ┃       Δ ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━━╇━━━━━━━━━┩
+│ Mexico         │  A  │  1  │  85.3% │ 100.0% │ ▲ +14.7 │
+│ South Korea    │  A  │  2  │  74.7% │  85.0% │ ▲ +10.3 │
+│ South Africa   │  A  │  4  │  45.3% │  27.2% │ ▼ -18.1 │
+│ Czech Republic │  A  │  3  │  67.6% │  30.2% │ ▼ -37.3 │
+└────────────────┴─────┴─────┴────────┴────────┴─────────┘
 ```
 
 ## Run it in 30 seconds
@@ -41,8 +41,9 @@ pip install -r requirements.txt
 python -m wctracker --provider offline
 ```
 
-That's it — it prints the table straight away using the bundled sample data, no
-API key required.
+That's it — it prints the table straight away from a bundled snapshot of the
+**real** group-stage results (frozen 2026-06-19), no API key required. For
+up-to-the-minute numbers, use a live provider (below).
 
 > **Windows:** replace `source .venv/bin/activate` with `.venv\Scripts\activate`.
 
@@ -57,8 +58,9 @@ python -m wctracker --provider offline
 
 ### Live results (optional)
 
-`--provider offline` uses bundled **sample** data so it works instantly. For
-**real** match results, grab a free key (10 req/min) at
+`--provider offline` uses a bundled snapshot of real results **frozen at a
+date**, so it works instantly but goes stale. For **live, auto-updating**
+results, grab a free key (10 req/min) at
 [football-data.org/client/register](https://www.football-data.org/client/register)
 — each person uses their own:
 
@@ -100,7 +102,7 @@ The data layer sits behind a small `DataProvider` interface
 | **football-data.org** | 10 req/min | One call returns every group fixture + score, with group labels | `X-Auth-Token` header | **Default** |
 | API-Football (api-sports.io) | 100 req/day | Very broad | API key header | Easy to add as another provider |
 | TheSportsDB | loose, test key `3` | Variable; weaker live standings | key in URL | Bundled fallback example |
-| _offline_ | — | Bundled illustrative snapshot | none | Zero-setup demo + tests |
+| _offline_ | — | Real results, frozen at a date | none | Zero-setup default + tests |
 
 **Why football-data.org is the default:** a single authenticated GET to
 `/competitions/WC/matches` returns every group-stage fixture with its group and
@@ -152,9 +154,11 @@ python scripts/build_snapshot.py         # regenerate the offline snapshot
 python scripts/build_baseline.py         # regenerate the frozen baseline
 ```
 
-The bundled `snapshot.json` is **illustrative sample data**, not official FIFA
-results — it exists so the tool and tests run with no key or network. Live
-providers override it entirely.
+The bundled `snapshot.json` holds **real** group-stage results curated from the
+official/Wikipedia group pages, **frozen at `fetched_at`** — it exists so the
+tool and tests run with no key or network. Because it is frozen it goes stale;
+`scripts/build_snapshot.py` refreshes it, and live providers override it
+entirely with current data.
 
 ## License
 

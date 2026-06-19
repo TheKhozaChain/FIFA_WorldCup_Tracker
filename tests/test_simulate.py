@@ -45,11 +45,13 @@ def test_seed_is_reproducible():
     assert a == b
 
 
-def test_dominant_team_advances_hopeless_team_does_not():
-    t = OfflineProvider().fetch()
-    p = simulate(t, n_sims=10000, seed=3).probabilities
-    assert p["Spain"] > 0.95     # 4 pts, +6 GD with a game in hand
-    assert p["Jordan"] < 0.05    # winless tail-ender
+def test_clinched_team_certain_eliminated_team_impossible():
+    # In the fully-played fixture there is nothing left to simulate: each
+    # group's winner is certain to advance and its bottom team cannot.
+    t = _fully_played_tournament()
+    p = simulate(t, n_sims=200, seed=3).probabilities
+    assert p["A1"] == 1.0        # group winner, 9 pts
+    assert p["A4"] == 0.0        # bottom of group, 0 pts, weakest third
 
 
 def test_vectorised_advancement_matches_pure_tiebreak():

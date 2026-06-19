@@ -47,7 +47,7 @@ def load_tournament(
     if not refresh:
         cached = cache.load(provider_name, ttl=ttl)
         if cached is not None:
-            label = "⚠ SAMPLE data (offline)" if is_offline else f"cache ({provider_name})"
+            label = _offline_label(cached) if is_offline else f"cache ({provider_name})"
             return cached, label
 
     provider = make_provider(provider_name)
@@ -55,11 +55,16 @@ def load_tournament(
         tournament = provider.fetch()
         cache.save(provider_name, tournament)
         if is_offline:
-            return tournament, "⚠ SAMPLE data (offline) — illustrative, NOT real results"
+            return tournament, _offline_label(tournament)
         return tournament, f"live fetch ({provider_name})"
     except ProviderError as exc:
         if is_offline:
             raise
         # Fall back to the bundled snapshot so the tool still runs offline.
         fallback = OfflineProvider().fetch()
-        return fallback, f"⚠ SAMPLE data (offline fallback — live fetch failed: {exc})"
+        return fallback, f"{_offline_label(fallback)} — live fetch failed: {exc}"
+
+
+def _offline_label(tournament: Tournament) -> str:
+    frozen = tournament.fetched_at or "unknown date"
+    return f"⚠ frozen offline snapshot ({frozen}) — run live for latest"

@@ -1,18 +1,17 @@
 """Offline provider: builds a `Tournament` from the bundled snapshot.
 
-This is what makes the tool runnable with no API key and no network — and it
-is also the fixture every test relies on. The snapshot stores group line-ups
-plus whatever results have been "played"; the full 6-match-per-group fixture
-list is generated from the round-robin schedule, and any fixture with a stored
-result is marked played.
+The snapshot (`wctracker/data/snapshot.json`) is a curated copy of the real
+group-stage state — groups, played results, and remaining fixtures — frozen at
+`fetched_at`. It lets the tool run with no API key or network, and is the
+fixture the tests rely on. Because it is frozen, it goes stale: use a live
+provider for up-to-the-minute numbers.
 """
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional
 
-from ..fixtures import round_robin
 from ..types import Match, Tournament
 from .base import DataProvider, ProviderError
 
@@ -33,34 +32,23 @@ class OfflineProvider(DataProvider):
 
 
 def tournament_from_snapshot(data: dict, source: str = "offline") -> Tournament:
-    """Expand a {groups, results} snapshot into a full `Tournament`."""
-    groups: Dict[str, List[str]] = data["groups"]
-    results = _index_results(data.get("results", []))
-
+    """Read a {groups, matches} snapshot into a `Tournament`."""
     matches: List[Match] = []
-    for group, teams in groups.items():
-        for home, away in round_robin(teams):
-            score = results.get((group, home, away))
-            if score is not None:
-                matches.append(
-                    Match(group, home, away, score[0], score[1], played=True)
-                )
-            else:
-                matches.append(Match(group, home, away, played=False))
-
+    for m in data["matches"]:
+        played = bool(m.get("played", False))
+        matches.append(
+            Match(
+                group=m["group"],
+                home=m["home"],
+                away=m["away"],
+                home_goals=m["home_goals"] if played else None,
+                away_goals=m["away_goals"] if played else None,
+                played=played,
+            )
+        )
     return Tournament(
-        groups=groups,
+        groups=data["groups"],
         matches=matches,
         fetched_at=data.get("fetched_at", ""),
         source=source,
     )
-
-
-def _index_results(results: List[dict]) -> Dict[Tuple[str, str, str], Tuple[int, int]]:
-    indexed: Dict[Tuple[str, str, str], Tuple[int, int]] = {}
-    for r in results:
-        indexed[(r["group"], r["home"], r["away"])] = (
-            int(r["home_goals"]),
-            int(r["away_goals"]),
-        )
-    return indexed

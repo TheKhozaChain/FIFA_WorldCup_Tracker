@@ -1,15 +1,15 @@
 {
-  "_comment": "Elo-style strength ratings used to seed the Poisson goal model. Higher = stronger. Any team not listed uses `_default`. These are illustrative pre-tournament seeds; edit freely or regenerate from a ranking source. See docs/methodology.md.",
+  "_comment": "Elo-style pre-tournament strength ratings for the real WC2026 field, used to seed the Poisson goal model. Higher = stronger. Any team not listed uses `_default`. These are approximate seeds — edit to taste or regenerate from a ranking source. See docs/methodology.md.",
   "_default": 1500,
 
-  "Spain": 2055, "France": 2040, "Argentina": 2030, "England": 1990, "Brazil": 1985,
-  "Portugal": 1965, "Netherlands": 1945, "Germany": 1925, "Belgium": 1900, "Italy": 1895,
-  "Croatia": 1860, "Uruguay": 1855, "Colombia": 1840, "Morocco": 1835, "Mexico": 1815,
-  "USA": 1805, "Switzerland": 1800, "Japan": 1795, "Senegal": 1790, "Denmark": 1785,
-  "Ecuador": 1760, "Austria": 1755, "Korea Republic": 1745, "Australia": 1730, "Canada": 1725,
-  "Ukraine": 1720, "Sweden": 1715, "Nigeria": 1710, "Serbia": 1705, "Egypt": 1700,
-  "Poland": 1695, "Iran": 1690, "Wales": 1680, "Ivory Coast": 1675, "Peru": 1665,
-  "Tunisia": 1650, "Cameroon": 1645, "Algeria": 1640, "Qatar": 1600, "Saudi Arabia": 1590,
-  "Ghana": 1585, "Costa Rica": 1575, "Jamaica": 1560, "Panama": 1545, "Uzbekistan": 1530,
-  "New Zealand": 1480, "Jordan": 1470, "Cape Verde": 1450
+  "Spain": 2050, "France": 2040, "Argentina": 2030, "England": 2000, "Brazil": 1990,
+  "Portugal": 1970, "Netherlands": 1950, "Germany": 1940, "Belgium": 1900, "Croatia": 1870,
+  "Morocco": 1855, "Uruguay": 1850, "Colombia": 1840, "Switzerland": 1810, "Mexico": 1810,
+  "USA": 1800, "Japan": 1800, "Norway": 1795, "Senegal": 1790, "Turkey": 1780,
+  "Ecuador": 1760, "Austria": 1755, "South Korea": 1745, "Australia": 1730, "Canada": 1725,
+  "Sweden": 1715, "Egypt": 1710, "Iran": 1700, "Ivory Coast": 1700, "Scotland": 1695,
+  "Czech Republic": 1690, "Paraguay": 1680, "Algeria": 1675, "Tunisia": 1660, "DR Congo": 1655,
+  "Bosnia and Herzegovina": 1640, "Ghana": 1620, "South Africa": 1600, "Panama": 1595, "Qatar": 1595,
+  "Saudi Arabia": 1585, "Uzbekistan": 1560, "Iraq": 1555, "Jordan": 1520, "Cape Verde": 1500,
+  "New Zealand": 1480, "Haiti": 1450, "Curacao": 1440
 }
