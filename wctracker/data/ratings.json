@@ -1,0 +1,15 @@
+{
+  "_comment": "Elo-style strength ratings used to seed the Poisson goal model. Higher = stronger. Any team not listed uses `_default`. These are illustrative pre-tournament seeds; edit freely or regenerate from a ranking source. See docs/methodology.md.",
+  "_default": 1500,
+
+  "Spain": 2055, "France": 2040, "Argentina": 2030, "England": 1990, "Brazil": 1985,
+  "Portugal": 1965, "Netherlands": 1945, "Germany": 1925, "Belgium": 1900, "Italy": 1895,
+  "Croatia": 1860, "Uruguay": 1855, "Colombia": 1840, "Morocco": 1835, "Mexico": 1815,
+  "USA": 1805, "Switzerland": 1800, "Japan": 1795, "Senegal": 1790, "Denmark": 1785,
+  "Ecuador": 1760, "Austria": 1755, "Korea Republic": 1745, "Australia": 1730, "Canada": 1725,
+  "Ukraine": 1720, "Sweden": 1715, "Nigeria": 1710, "Serbia": 1705, "Egypt": 1700,
+  "Poland": 1695, "Iran": 1690, "Wales": 1680, "Ivory Coast": 1675, "Peru": 1665,
+  "Tunisia": 1650, "Cameroon": 1645, "Algeria": 1640, "Qatar": 1600, "Saudi Arabia": 1590,
+  "Ghana": 1585, "Costa Rica": 1575, "Jamaica": 1560, "Panama": 1545, "Uzbekistan": 1530,
+  "New Zealand": 1480, "Jordan": 1470, "Cape Verde": 1450
+}
