@@ -34,6 +34,7 @@ _ALIASES = {
     "turkey": "Türkiye",
     "ivory coast": "Côte d'Ivoire",
     "cape verde": "Cabo Verde",
+    "cape verde islands": "Cabo Verde",
     "usa": "United States",
     "united states of america": "United States",
     "iran": "IR Iran",

@@ -10,6 +10,7 @@ def test_known_provider_variants_map_to_canonical():
         "Turkey": "Türkiye",
         "Ivory Coast": "Côte d'Ivoire",
         "Cape Verde": "Cabo Verde",
+        "Cape Verde Islands": "Cabo Verde",
         "USA": "United States",
         "Iran": "IR Iran",
         "DR Congo": "Congo DR",
