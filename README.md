@@ -1,5 +1,8 @@
 # wctracker — live WC2026 advancement tracker
 
+[![tests](https://github.com/TheKhozaChain/FIFA_WorldCup_Tracker/actions/workflows/tests.yml/badge.svg)](https://github.com/TheKhozaChain/FIFA_WorldCup_Tracker/actions/workflows/tests.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A small, open-source CLI that tracks **World Cup 2026 group-stage advancement
 probabilities** and updates itself from real results every time you run it.
 
