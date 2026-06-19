@@ -1,0 +1,8 @@
+# Runtime dependencies
+requests>=2.31         # HTTP client for the data providers
+python-dotenv>=1.0     # load API keys from .env
+numpy>=1.24            # vectorised Monte Carlo simulation
+rich>=13.0             # clean coloured terminal tables
+
+# Dev / test (install with: pip install -r requirements.txt)
+pytest>=7.4

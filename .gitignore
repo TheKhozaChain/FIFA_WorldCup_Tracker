@@ -1,0 +1,27 @@
+# Secrets
+.env
+
+# Local cache of fetched results (re-fetchable; never commit)
+data/cache/*
+!data/cache/.gitkeep
+
+# Generated report (regenerated each run)
+latest.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.DS_Store
