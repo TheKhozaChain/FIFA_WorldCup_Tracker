@@ -65,7 +65,9 @@ def build_rows(
     baseline: Dict[str, float],
     standings: Dict[str, List[TeamRecord]],
     remaining: Dict[str, int],
+    eliminated: set | None = None,
 ) -> List[Row]:
+    eliminated = eliminated or set()
     position: Dict[str, int] = {}
     record: Dict[str, TeamRecord] = {}
     for ordered in standings.values():
@@ -77,6 +79,10 @@ def build_rows(
     rows = []
     for team in tournament.teams():
         rec = record.get(team)
+        # A deterministic mathematical elimination overrides the simulation: a
+        # team that cannot reach third place is out even if random noise in the
+        # sim ever showed otherwise.
+        status = ELIMINATED if team in eliminated else status_of(now_probs[team])
         rows.append(Row(
             team=team,
             group=tournament.group_of(team) or "?",
@@ -88,7 +94,7 @@ def build_rows(
             played=rec.played if rec else 0,
             remaining=remaining.get(team, 0),
             won_group=team in winners,
-            status=status_of(now_probs[team]),
+            status=status,
         ))
     # Sort by Δ descending; teams without a baseline (Δ None) sort to the end.
     rows.sort(key=lambda r: (r.delta is not None, r.delta if r.delta is not None else 0.0,

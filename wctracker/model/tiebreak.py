@@ -8,13 +8,62 @@ across groups). This module is pure and deterministic so it can be tested hard.
 """
 from __future__ import annotations
 
-from typing import Dict, List
+import itertools
+from typing import Dict, List, Tuple
 
 from ..types import TeamRecord
 from .standings import order_group
 
 #: number of third-placed teams that advance to the knockout round
 BEST_THIRDS_ADVANCING = 8
+
+
+def is_eliminated_from_group(
+    team: str,
+    group_records: List[TeamRecord],
+    played_results: List[Tuple[str, str, int, int]],
+    remaining: List[Tuple[str, str]],
+) -> bool:
+    """Return True if `team` is **mathematically eliminated**.
+
+    A team advances only if it finishes in the top two of its group or as one of
+    the eight best third-placed teams — so a team that can no longer reach even
+    *third* place is out, no cross-group analysis required.
+
+    We enumerate every win/draw/loss combination of the group's remaining
+    fixtures and ask whether `team` can still finish in the top three. Crucially,
+    this honours the WC2026 rule that **head-to-head is decided before goal
+    difference**: a rival level on points that has already beaten `team` is
+    counted as finishing above it. The check is *sound* — it only declares
+    elimination when no surviving scenario exists (multi-way point ties are left
+    in the team's favour), so it never eliminates a team prematurely.
+    """
+    current = {r.team: r.points for r in group_records}
+    others = [t for t in current if t != team]
+
+    h2h_base = {}
+    for home, away, hg, ag in played_results:
+        h2h_base[frozenset((home, away))] = home if hg > ag else (away if ag > hg else None)
+
+    # home pts, away pts, winning side for each possible match outcome
+    outcomes = ((3, 0, "h"), (1, 1, None), (0, 3, "a"))
+    for combo in itertools.product(outcomes, repeat=len(remaining)):
+        pts = dict(current)
+        h2h = dict(h2h_base)
+        for (home, away), (hp, ap, side) in zip(remaining, combo):
+            pts[home] += hp
+            pts[away] += ap
+            h2h[frozenset((home, away))] = home if side == "h" else (away if side == "a" else None)
+
+        tp = pts[team]
+        above = sum(1 for r in others if pts[r] > tp)
+        level = [r for r in others if pts[r] == tp]
+        # A single rival level on points that won the head-to-head finishes above.
+        if len(level) == 1 and h2h.get(frozenset((level[0], team))) == level[0]:
+            above += 1
+        if above <= 2:           # third place (or better) is still reachable
+            return False
+    return True
 
 
 def group_qualifiers(ordered_group: List[TeamRecord]) -> List[TeamRecord]:

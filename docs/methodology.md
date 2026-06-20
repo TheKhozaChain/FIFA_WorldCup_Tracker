@@ -52,33 +52,50 @@ drawn as independent `Poisson(λ_home)` and `Poisson(λ_away)`.
 
 For `N` simulations (default 10,000, `--sims`), for **every unplayed fixture**
 we sample a scoreline and add it onto the current standings, then resolve
-advancement (`model/simulate.py`). The whole thing is **vectorised over N** with
-numpy, so 10,000 runs take a fraction of a second.
+advancement (`model/simulate.py`). Goal sampling is vectorised with numpy; the
+ranking is then resolved per simulation so the official tie-breakers apply
+exactly.
 
-Ranking uses a single composite key that encodes the FIFA order exactly:
+#### Within-group order (the WC2026 tie-breakers)
 
-```
-key = points·10⁶ + (goal_difference + 500)·10³ + goals_scored + jitter
-```
+This is where 2026 differs from previous World Cups, and getting it wrong
+changes who is eliminated. The order (`order_group_h2h`) is:
 
-- **points** dominate, then **goal difference**, then **goals scored** — the
-  same order as the pure-Python `model/tiebreak.py`.
-- `jitter` is a per-team random value in `[0, 0.5)`. It only ever decides teams
-  that are otherwise *exactly* tied (goal counts are integers, so a real
-  one-goal edge is ≥ 1 and never overturned). This stands in for the
-  competition's final "drawing of lots".
+1. **points**
+2. **head-to-head** among the teams level on points — points, then goal
+   difference, then goals scored *in the matches between those teams only*
+3. **overall goal difference**, then **overall goals scored**
+4. **FIFA ranking** (approximated by our `ratings.json`)
 
-Within each group the top 2 by key advance. The 12 third-placed teams are then
-compared **by the same key across groups**, and the top 8 advance. A team's
-probability is the fraction of the N simulations in which it advanced.
+The critical point: for 2026 **head-to-head is applied *before* overall goal
+difference** — the reverse of Qatar 2022. A team level on points with a rival
+that beat it head-to-head cannot overtake that rival on goal difference. (Real
+example: Haiti, on 0 points, having lost to Scotland, is eliminated even though
+it could in principle finish with a better overall goal difference.)
 
-> **Tie-break scope.** FIFA's full group rules add head-to-head and fair-play
-> steps before lots. For the *cross-group* best-third comparison there is no
-> head-to-head (the teams never met), so points → GD → goals scored → lots is
-> the correct and complete order. Within a group we apply points → GD → goals
-> scored and resolve any remaining exact tie randomly, omitting the head-to-head
-> sub-step — a documented simplification that affects only teams level on all
-> three primary criteria.
+> **Sources:** FIFA World Cup 2026 regulations, Article 13; corroborated by
+> [Sofascore](https://www.sofascore.com/news/__trashed-21),
+> [JudgeMate](https://www.judgemate.com/en/guides/world-cup-2026-group-stage-tiebreakers-explained),
+> and [GamblingCalc](https://gamblingcalc.com/gambling-guides/world-cup-2026-tiebreaker-rules/).
+> We apply head-to-head as a single mini-table pass; the rare recursive
+> "re-apply after partial separation" case and the fair-play/disciplinary step
+> (we don't model cards) are documented simplifications. Teams identical on every
+> modelled criterion fall back to FIFA ranking, then name/id — there is no
+> "drawing of lots" in 2026.
+
+#### Best third-placed and elimination
+
+The 12 third-placed teams are then compared **across groups** on points → goal
+difference → goals scored → FIFA ranking (no head-to-head — they never met), and
+the top 8 advance. A team's probability is the fraction of the N simulations in
+which it advanced.
+
+**Elimination** is also computed exactly, not just inferred from "0 simulations":
+`is_eliminated_from_group` enumerates every win/draw/loss combination of a
+group's remaining fixtures and declares a team out only when it can reach **no**
+top-three finish under any of them (honouring head-to-head). This removes the
+edge case where a vanishingly small true chance could round to zero sims, and
+drives the `✗ out` status in the table.
 
 ### 4. Baseline and Δ
 

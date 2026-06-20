@@ -4,6 +4,7 @@ from wctracker.model.standings import (
     build_records,
     compute_standings,
     order_group,
+    order_group_h2h,
 )
 from wctracker.types import Match, TeamRecord, Tournament
 
@@ -57,6 +58,34 @@ def test_equal_records_fall_back_to_alphabetical():
         TeamRecord("Alpha", "A", won=1, gf=1, ga=0),
     ]
     assert [r.team for r in order_group(records)] == ["Alpha", "Zeta"]
+
+
+def test_head_to_head_outranks_goal_difference():
+    # WC2026 rule: teams level on points are split by head-to-head BEFORE
+    # overall goal difference. B beat A head-to-head, but A has the better
+    # overall GD — B must still rank above A.
+    records = [
+        TeamRecord("A", "X", won=1, lost=1, gf=6, ga=1),   # 3 pts, GD +5
+        TeamRecord("B", "X", won=1, lost=1, gf=2, ga=1),   # 3 pts, GD +1
+        TeamRecord("C", "X", drawn=1, lost=1, gf=1, ga=3),
+        TeamRecord("D", "X", lost=1, drawn=1, gf=1, ga=5),
+    ]
+    results = [("B", "A", 1, 0)]   # B beat A in their meeting
+    ordered = [r.team for r in order_group_h2h(records, results)]
+    assert ordered.index("B") < ordered.index("A")
+
+
+def test_head_to_head_draw_falls_through_to_goal_difference():
+    # If the head-to-head was a draw, the level teams are split on overall GD.
+    records = [
+        TeamRecord("A", "X", won=1, drawn=1, gf=5, ga=1),  # 4 pts, GD +4
+        TeamRecord("B", "X", won=1, drawn=1, gf=2, ga=1),  # 4 pts, GD +1
+        TeamRecord("C", "X", lost=2, gf=0, ga=5),
+        TeamRecord("D", "X", lost=2, gf=1, ga=2),
+    ]
+    results = [("A", "B", 1, 1)]   # drew head-to-head
+    ordered = [r.team for r in order_group_h2h(records, results)]
+    assert ordered.index("A") < ordered.index("B")   # decided by GD +4 vs +1
 
 
 def test_compute_standings_full_group_order():

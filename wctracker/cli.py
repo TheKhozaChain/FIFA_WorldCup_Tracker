@@ -15,6 +15,7 @@ from . import __version__
 from .baseline import load_baseline
 from .model.simulate import simulate
 from .model.standings import compute_standings
+from .model.tiebreak import is_eliminated_from_group
 from .providers import cache
 from .providers.factory import available_providers, load_tournament
 from .report import Row, build_rows
@@ -61,6 +62,20 @@ def _remaining_games(tournament: Tournament) -> Dict[str, int]:
     return remaining
 
 
+def _eliminated_teams(tournament: Tournament, standings) -> set:
+    """Teams mathematically unable to reach third place in their group."""
+    eliminated = set()
+    for group, records in standings.items():
+        played = [(m.home, m.away, m.home_goals, m.away_goals)
+                  for m in tournament.matches if m.played and m.group == group]
+        remaining = [(m.home, m.away)
+                     for m in tournament.matches if not m.played and m.group == group]
+        for rec in records:
+            if is_eliminated_from_group(rec.team, records, played, remaining):
+                eliminated.add(rec.team)
+    return eliminated
+
+
 def _filter_group(rows: List[Row], group: str | None) -> List[Row]:
     if not group:
         return rows
@@ -90,6 +105,7 @@ def run(argv: List[str] | None = None) -> int:
         baseline=load_baseline(),
         standings=standings,
         remaining=_remaining_games(tournament),
+        eliminated=_eliminated_teams(tournament, standings),
     )
     rows = _filter_group(all_rows, args.group)
     if not rows:

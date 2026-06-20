@@ -2,10 +2,15 @@
 from wctracker.model.tiebreak import (
     BEST_THIRDS_ADVANCING,
     best_thirds_advancing,
+    is_eliminated_from_group,
     qualified_teams,
     rank_best_thirds,
 )
 from wctracker.types import TeamRecord
+
+
+def _rec(name, pts):
+    return TeamRecord(name, "C", won=pts // 3, drawn=pts % 3)
 
 
 def third(name, pts=0, gd=0, gf=0):
@@ -39,6 +44,29 @@ def test_exactly_eight_of_twelve_advance():
     advancing_names = {t.team for t in advancing}
     # the four weakest (i = 0..3) must miss out
     assert advancing_names == {f"g{i:02d}" for i in range(4, 12)}
+
+
+def test_head_to_head_loss_eliminates_team_on_zero_points():
+    # The real Group C situation: Haiti (0 pts) lost head-to-head to Scotland,
+    # who is guaranteed >= 3 pts. Under 2026 head-to-head-first rules Haiti can
+    # never overtake Scotland for third, so Haiti is eliminated.
+    records = [_rec("Brazil", 4), _rec("Morocco", 4), _rec("Scotland", 3), _rec("Haiti", 0)]
+    played = [("Haiti", "Scotland", 0, 1)]   # Scotland won the head-to-head
+    remaining = [("Scotland", "Brazil"), ("Morocco", "Haiti")]
+
+    assert is_eliminated_from_group("Haiti", records, played, remaining) is True
+    # Everyone who can still reach third is alive.
+    assert is_eliminated_from_group("Scotland", records, played, remaining) is False
+    assert is_eliminated_from_group("Brazil", records, played, remaining) is False
+
+
+def test_two_losses_is_not_automatic_elimination():
+    # A 0-point team is NOT out if the decider against the third-placed rival is
+    # still to come — it can win that game and leapfrog on head-to-head.
+    records = [_rec("Top", 6), _rec("Second", 6), _rec("Rival", 3), _rec("Us", 0)]
+    played = []                       # Us-vs-Rival not played yet
+    remaining = [("Us", "Rival")]     # win this and Us draws level, winning H2H
+    assert is_eliminated_from_group("Us", records, played, remaining) is False
 
 
 def test_full_qualified_set_top_two_plus_best_thirds():

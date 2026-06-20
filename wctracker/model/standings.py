@@ -45,12 +45,15 @@ def apply_match(records: Dict[str, TeamRecord], match: Match) -> None:
         away.drawn += 1
 
 
-def compute_standings(tournament: Tournament) -> Dict[str, List[TeamRecord]]:
+def compute_standings(
+    tournament: Tournament,
+    ratings: Dict[str, float] | None = None,
+) -> Dict[str, List[TeamRecord]]:
     """Return ordered standings per group: {group_letter: [1st, 2nd, 3rd, 4th]}.
 
-    Ordering is FIFA group order (points, goal difference, goals scored). Teams
-    that remain exactly tied keep a stable alphabetical order here; the genuine
-    random tie-break only matters inside the Monte Carlo simulation.
+    Ordering follows the official **WC2026** group order (see `order_group_h2h`):
+    points, then head-to-head among teams level on points, then overall goal
+    difference / goals scored, then FIFA ranking (approximated by `ratings`).
     """
     records = build_records(tournament)
     for match in tournament.matches:
@@ -59,18 +62,96 @@ def compute_standings(tournament: Tournament) -> Dict[str, List[TeamRecord]]:
     standings: Dict[str, List[TeamRecord]] = {}
     for group, teams in tournament.groups.items():
         group_records = [records[t] for t in teams]
-        standings[group] = order_group(group_records)
+        results = [
+            (m.home, m.away, m.home_goals, m.away_goals)
+            for m in tournament.matches
+            if m.played and m.group == group
+        ]
+        standings[group] = order_group_h2h(group_records, results, ratings)
     return standings
 
 
 def order_group(records: Iterable[TeamRecord]) -> List[TeamRecord]:
-    """Sort one group's records best-first by points, GD, goals scored, then
-    team name (stable, deterministic fallback)."""
+    """Sort best-first by points, GD, goals scored, then team name.
+
+    Used for the **cross-group** best-third comparison, where head-to-head does
+    not apply (the teams never met)."""
     return sorted(
         records,
         key=lambda r: (r.points, r.gd, r.gf, _name_key(r.team)),
         reverse=True,
     )
+
+
+def order_group_h2h(
+    records: Iterable,
+    results: Iterable,
+    ratings: Dict | None = None,
+    default_rating: float = 1500.0,
+) -> List:
+    """Order one group best-first under the **WC2026 within-group rules**:
+
+      1. points
+      2. head-to-head among teams level on points: points, then goal
+         difference, then goals scored *in the matches between them*
+      3. overall goal difference, then overall goals scored
+      4. FIFA ranking (approximated here by `ratings`)
+
+    `records` need `.team`, `.points`, `.gd`, `.gf`; `results` are
+    `(home, away, home_goals, away_goals)` tuples for the group's resolved
+    matches. (Head-to-head is applied as a single mini-table pass — a documented
+    simplification of the rare recursive "re-apply after partial separation"
+    case; see docs/methodology.md.)
+    """
+    ratings = ratings or {}
+
+    def rating_of(team):
+        return ratings.get(team, ratings.get("__default__", default_rating))
+
+    recs = sorted(records, key=lambda r: r.team)          # stable A→Z / id base
+    recs.sort(key=lambda r: r.points, reverse=True)        # then by points
+
+    ordered: List = []
+    i, n = 0, len(recs)
+    while i < n:
+        j = i
+        while j < n and recs[j].points == recs[i].points:
+            j += 1
+        cluster = recs[i:j]
+        if len(cluster) == 1:
+            ordered.extend(cluster)
+        else:
+            ordered.extend(_resolve_tie(cluster, list(results), rating_of))
+        i = j
+    return ordered
+
+
+def _resolve_tie(cluster: List, results: List, rating_of) -> List:
+    """Order teams that are level on points using the head-to-head mini-table,
+    then overall GD / goals, then rating."""
+    names = {r.team for r in cluster}
+    mini = {r.team: [0, 0, 0] for r in cluster}   # [h2h points, h2h GD, h2h GF]
+    for home, away, hg, ag in results:
+        if home in names and away in names:
+            mini[home][1] += hg - ag
+            mini[home][2] += hg
+            mini[away][1] += ag - hg
+            mini[away][2] += ag
+            if hg > ag:
+                mini[home][0] += 3
+            elif ag > hg:
+                mini[away][0] += 3
+            else:
+                mini[home][0] += 1
+                mini[away][0] += 1
+
+    def key(r):
+        m = mini[r.team]
+        return (m[0], m[1], m[2], r.gd, r.gf, rating_of(r.team))
+
+    # reverse=True ranks the key descending; teams identical on every criterion
+    # keep the cluster's existing A→Z / id order (stable sort).
+    return sorted(cluster, key=key, reverse=True)
 
 
 def _name_key(name: str) -> tuple:
