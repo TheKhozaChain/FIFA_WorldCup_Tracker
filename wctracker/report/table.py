@@ -39,7 +39,10 @@ def _delta_style(value) -> str:
 
 def render(rows: List[Row], title: str, note: str = "") -> None:
     console = Console()
-    table = Table(title=title, title_style="bold", caption=note, caption_style="dim")
+    # show_lines draws a rule under every row so the eye can track a team
+    # straight across the columns.
+    table = Table(title=title, title_style="bold", caption=note,
+                  caption_style="dim", show_lines=True)
     table.add_column("Team", style="bold")
     table.add_column("Grp", justify="center")
     table.add_column("Pos", justify="center", style="dim")
